@@ -1,28 +1,19 @@
 def call(Map config = [:]) {
 
-    pipeline {
-        agent any
+    if (!config.appPath) {
+        error "springBootPipeline: 'appPath' is required"
+    }
 
-        stages {
+    stage('Checkout') {
+        checkout scm
+    }
 
-            stage('Checkout') {
-                steps {
-                    checkout scm
-                }
-            }
-
-            stage('Gradle Build') {
-                steps {
-                    script {
-                        def appPath = config.appPath
-                        sh """
-                          cd ${appPath}
-                          chmod +x gradlew
-                          ./gradlew clean build
-                        """
-                    }
-                }
-            }
+    stage('Gradle Build') {
+        dir(config.appPath) {
+            sh '''
+                chmod +x gradlew
+                ./gradlew clean build
+            '''
         }
     }
 }
