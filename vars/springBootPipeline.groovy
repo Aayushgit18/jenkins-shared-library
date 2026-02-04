@@ -3,13 +3,29 @@ def call(Map config = [:]) {
     pipeline {
         agent any
 
+        environment {
+            APP_NAME = config.appName
+            APP_PATH = config.appPath
+        }
+
         stages {
-            stage('Shared Library Test') {
+
+            stage('Checkout') {
                 steps {
-                    echo "✅ Jenkins Shared Library is working!"
-                    echo "Application Name: ${config.appName}"
+                    checkout scm
+                }
+            }
+
+            stage('Gradle Build') {
+                steps {
+                    sh """
+                      cd ${APP_PATH}
+                      chmod +x gradlew
+                      ./gradlew clean build
+                    """
                 }
             }
         }
     }
 }
+
