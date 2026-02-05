@@ -9,8 +9,9 @@ def call() {
                 --name $AKS_NAME \
                 --resource-group $AKS_RG \
                 --overwrite-existing
+
+              kubelogin convert-kubeconfig -l azurecli
             '''
         }
     }
 }
-
