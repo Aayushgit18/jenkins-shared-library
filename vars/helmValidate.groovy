@@ -6,9 +6,10 @@ def call(Map config = [:]) {
 
     stage('Helm Lint & Template') {
         sh """
-          helm lint ${config.chartPath}
-          helm template ${config.chartPath}
+          cd ${config.chartPath}
+          helm dependency build
+          helm lint .
+          helm template .
         """
     }
 }
-
