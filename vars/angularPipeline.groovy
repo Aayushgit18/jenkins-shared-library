@@ -7,7 +7,7 @@ def call(Map config = [:]) {
     stage('Frontend Build & Test') {
         dir(config.appPath) {
             sh '''
-              npm install
+              npm install --legacy-peer-deps
               npm test -- --watch=false || true
               npm run build --prod
             '''
