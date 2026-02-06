@@ -4,12 +4,14 @@ def call(Map config = [:]) {
         error "dockerPush: image and acrName are required"
     }
 
-    stage('Push Image to ACR') {
+    def appName = config.image.split(':')[0]
+
+    stage("Push Image to ACR (${appName}:latest)") {
         sh """
           az acr login --name ${config.acrName}
-          docker tag ${config.image} ${config.acrName}.azurecr.io/${config.image}
-          docker push ${config.acrName}.azurecr.io/${config.image}
+
+          docker tag ${appName}:latest ${config.acrName}.azurecr.io/${appName}:latest
+          docker push ${config.acrName}.azurecr.io/${appName}:latest
         """
     }
 }
-
